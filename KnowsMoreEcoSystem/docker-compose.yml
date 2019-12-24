@@ -1,0 +1,65 @@
+version: '3.7'
+services:
+#  TODO ENABLE FOR LUKA
+#  gateway:
+#    container_name: gateway
+#    build:
+#      context: ../
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8090:80"
+#    env_file:
+#      - .env.docker
+#    depends_on:
+#      - knowsmore-redis
+#      - knowsmore-database
+#
+#  user:
+#    build:
+#      context: ../../knowsmore-user
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8091:81"
+#    env_file:
+#      - .env.docker
+#    depends_on:
+#      - knowsmore-database
+#      - knowsmore-redis
+#      - knowsmore-rabbitmq
+#
+#  email:
+#    build:
+#      context: ../../knowsmore-email
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8092:82"
+#    env_file:
+#      - .env.docker
+#    depends_on:
+#      - knowsmore-rabbitmq
+
+  # Infrastructure
+  knowsmore-database:
+    container_name: knowsmore-database
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  knowsmore-redis:
+    image: redis
+    container_name: knowsmore-redis
+    ports:
+      - "6379:6379"
+
+  knowsmore-rabbitmq:
+    image: rabbitmq:management
+    # Default user/pass: guest/guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./volumes/messaging/log:/var/log/rabbitmq
+      - ./volumes/messaging/lib:/var/lib/rabbitmq
